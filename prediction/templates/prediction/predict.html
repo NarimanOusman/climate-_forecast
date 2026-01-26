@@ -1,9 +1,12 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
+<div id="animation-container" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;"></div>
+
 <div class="row justify-content-center">
     <div class="col-md-8">
-        <div class="card p-4">
+        <div class="card p-4" style="background: rgba(255, 255, 255, 0.9);">
             <h2 class="text-center mb-4">Find the Best Crop for Your Soil</h2>
             <form method="post">
                 {% csrf_token %}
@@ -28,4 +31,22 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="{% static 'prediction/js/floating_lines.js' %}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const container = document.getElementById('animation-container');
+        new FloatingLines(container, {
+            enabledWaves: ["top", "middle", "bottom"],
+            lineCount: 5,
+            lineDistance: 5,
+            bendRadius: 5,
+            bendStrength: -0.5,
+            interactive: true,
+            parallax: true,
+            // linesGradient: ['#E947F5', '#2F4BA2'] // Optional: Use gradient colors if desired
+        });
+    });
+</script>
 {% endblock %}
