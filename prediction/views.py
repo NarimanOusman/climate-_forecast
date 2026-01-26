@@ -6,22 +6,33 @@ from .models import PredictionReport
 import os
 from django.conf import settings
 
-# Load model and encoder (global scope to load once)
-MODEL_PATH = os.path.join(settings.BASE_DIR, 'crop_recommendation_pipeline.pkl')
-ENCODER_PATH = os.path.join(settings.BASE_DIR, 'crop_label_encoder.pkl')
+# Lazy loading variables
+model = None
+encoder = None
 
-try:
-    model = joblib.load(MODEL_PATH)
-    # Check if encoded needs to be loaded separately or if pipeline handles it.
-    # Based on app.py, label encoder was used to inverse transform.
-    # But pipeline usually includes preprocessing. 
-    # Let's assume we need the encoder for the target label if the model outputs numbers.
-    # app.py: crop_name = le.inverse_transform(prediction)[0]
-    encoder = joblib.load(ENCODER_PATH)
-except Exception as e:
-    print(f"Error loading model: {e}")
-    model = None
-    encoder = None
+def get_model_and_encoder():
+    """Lazily load the model and encoder."""
+    global model, encoder
+    
+    if model is None:
+        try:
+            MODEL_PATH = os.path.join(settings.BASE_DIR, 'crop_recommendation_pipeline.pkl')
+            model = joblib.load(MODEL_PATH, mmap_mode='r')
+            print("Model loaded successfully.")
+        except Exception as e:
+            print(f"Error loading model: {e}")
+            model = None
+
+    if encoder is None:
+        try:
+            ENCODER_PATH = os.path.join(settings.BASE_DIR, 'crop_label_encoder.pkl')
+            encoder = joblib.load(ENCODER_PATH, mmap_mode='r')
+            print("Encoder loaded successfully.")
+        except Exception as e:
+            print(f"Error loading encoder: {e}")
+            encoder = None
+            
+    return model, encoder
 
 def predict_crop(request):
     prediction = None
@@ -39,6 +50,9 @@ def predict_crop(request):
                 data['ph'],
                 data['rainfall']
             ]]
+            
+            # Ensure model is loaded
+            model, encoder = get_model_and_encoder()
             
             if model and encoder:
                 # Predict
