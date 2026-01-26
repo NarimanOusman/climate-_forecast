@@ -3,39 +3,41 @@
 {% block content %}
 <h2 class="mb-4">Prediction Reports</h2>
 <div class="card p-4">
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Crop</th>
-                <th>Nitrogen</th>
-                <th>Phosphorus</th>
-                <th>Potassium</th>
-                <th>Temp</th>
-                <th>Humidity</th>
-                <th>pH</th>
-                <th>Rainfall</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for report in reports %}
-            <tr>
-                <td>{{ report.created_at|date:"Y-m-d H:i" }}</td>
-                <td><strong>{{ report.predicted_crop }}</strong></td>
-                <td>{{ report.nitrogen }}</td>
-                <td>{{ report.phosphorus }}</td>
-                <td>{{ report.potassium }}</td>
-                <td>{{ report.temperature }}</td>
-                <td>{{ report.humidity }}</td>
-                <td>{{ report.ph }}</td>
-                <td>{{ report.rainfall }}</td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="9" class="text-center">No reports found.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table class="table table-striped mb-0">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Crop</th>
+                    <th>Nitrogen</th>
+                    <th>Phosphorus</th>
+                    <th>Potassium</th>
+                    <th>Temp</th>
+                    <th>Humidity</th>
+                    <th>pH</th>
+                    <th>Rainfall</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for report in reports %}
+                <tr>
+                    <td>{{ report.created_at|date:"Y-m-d H:i" }}</td>
+                    <td><strong>{{ report.predicted_crop }}</strong></td>
+                    <td>{{ report.nitrogen }}</td>
+                    <td>{{ report.phosphorus }}</td>
+                    <td>{{ report.potassium }}</td>
+                    <td>{{ report.temperature }}</td>
+                    <td>{{ report.humidity }}</td>
+                    <td>{{ report.ph }}</td>
+                    <td>{{ report.rainfall }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="9" class="text-center">No reports found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}
