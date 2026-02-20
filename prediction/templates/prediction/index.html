@@ -5,22 +5,22 @@
 <style>
     .hero-section {
         min-height: auto;
-        /* Remove fixed height */
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
         text-align: center;
         background: transparent;
-        /* Remove background gradient */
         position: relative;
-        padding: 20px 0 40px;
+        padding: 5px 0 20px;
+        /* Highly reduced top padding to push image up */
+        margin-top: -10px;
     }
 
     .hero-image-container {
         width: 100%;
-        max-width: 500px;
-        margin: 0 auto 30px;
+        max-width: 480px;
+        margin: 0 auto 20px;
         opacity: 0;
         transform: translateY(20px);
         animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -30,7 +30,6 @@
         width: 100%;
         height: auto;
         border-radius: 30px;
-        /* Subtle shadow to make it pop without a heavy background */
         filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.15));
     }
 
@@ -50,26 +49,26 @@
     }
 
     .hero-title {
-        font-size: clamp(2rem, 7vw, 4rem);
+        font-size: clamp(1.8rem, 6vw, 3.8rem);
         font-weight: 800;
-        margin-bottom: 1rem;
+        margin-bottom: 0.75rem;
         letter-spacing: -0.02em;
         color: var(--text-color);
         line-height: 1.1;
     }
 
     .hero-subtitle {
-        font-size: clamp(0.9rem, 4vw, 1.15rem);
+        font-size: clamp(0.85rem, 4vw, 1.1rem);
         color: var(--text-muted);
         max-width: 600px;
-        margin: 0 auto 2rem;
-        line-height: 1.5;
+        margin: 0 auto 1.5rem;
+        line-height: 1.4;
         padding: 0 1rem;
     }
 
     .btn-hero {
-        padding: 0.85rem 2rem;
-        font-size: 1rem;
+        padding: 0.8rem 1.8rem;
+        font-size: 0.95rem;
         font-weight: 600;
         border-radius: 50px;
         background: var(--primary-color);
@@ -86,6 +85,12 @@
         box-shadow: 0 15px 30px rgba(39, 174, 96, 0.3);
         background: var(--secondary-color);
         color: white;
+    }
+
+    /* Create space between hero and cards */
+    .feature-section-container {
+        padding-top: 120px;
+        padding-bottom: 80px;
     }
 
     /* Staggered Slide Left Animation */
@@ -119,7 +124,26 @@
         backdrop-filter: blur(12px);
         -webkit-backdrop-filter: blur(12px);
         transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        margin-bottom: 2rem;
+        overflow: hidden;
+    }
+
+    .card-img-wrapper {
+        height: 180px;
+        overflow: hidden;
         margin-bottom: 1.5rem;
+        border-radius: 12px;
+    }
+
+    .card-img-wrapper img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .feature-card:hover .card-img-wrapper img {
+        transform: scale(1.1);
     }
 
     .feature-card h3 {
@@ -133,26 +157,40 @@
         color: #e0ff2e !important;
         font-weight: 500;
         font-size: 0.9rem;
+        margin-bottom: 0;
     }
 
     .feature-card:hover {
         transform: translateY(-8px);
         border-color: var(--primary-color);
+        box-shadow: 0 15px 30px rgba(39, 174, 96, 0.15);
     }
 
     @media (max-width: 768px) {
         .hero-section {
-            padding: 40px 0 20px;
+            padding: 5px 0 15px;
         }
 
         .hero-image-container {
-            max-width: 300px;
-            margin-bottom: 20px;
+            max-width: 320px;
+            margin-bottom: 15px;
+        }
+
+        .hero-title {
+            font-size: 2.2rem;
+        }
+
+        .feature-section-container {
+            padding-top: 80px;
         }
 
         .gap-btn-mobile {
             flex-direction: column;
             gap: 1rem !important;
+        }
+
+        .card-img-wrapper {
+            height: 150px;
         }
     }
 </style>
@@ -160,9 +198,8 @@
 
 {% block content %}
 <section class="hero-section">
-    <!-- Centered Image right after Nav -->
     <div class="hero-image-container">
-        <img src="{% static 'prediction/images/farmer.png' %}" alt="Nariman Farmer" class="hero-image">
+        <img src="{% static 'images/farm_bio.png' %}" alt="Nariman Farmer" class="hero-image">
     </div>
 
     <div class="hero-content">
@@ -180,25 +217,34 @@
 </section>
 
 <!-- Features Section -->
-<div class="container pb-5">
+<div class="container feature-section-container">
     <div class="row">
         <div class="col-md-4">
-            <div class="feature-card stagger-card stagger-delay-1 text-center p-4">
-                <div class="fs-1 mb-2">🧪</div>
+            <div class="feature-card stagger-card stagger-delay-1 text-center p-3">
+                <div class="card-img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?q=80&w=600&auto=format&fit=crop"
+                        alt="Soil Analysis">
+                </div>
                 <h3>Soil Analysis</h3>
                 <p class="lemon-text">Precision tracking of Nitrogen, Phosphorus, and Potassium balance.</p>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="feature-card stagger-card stagger-delay-2 text-center p-4">
-                <div class="fs-1 mb-2">🌦️</div>
+            <div class="feature-card stagger-card stagger-delay-2 text-center p-3">
+                <div class="card-img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1500382017468-9049fed747ef?q=80&w=600&auto=format&fit=crop"
+                        alt="Climatic Data">
+                </div>
                 <h3>Climatic Data</h3>
                 <p class="lemon-text">Adaptive modeling using real-time Humidity, Rainfall, and Temp.</p>
             </div>
         </div>
         <div class="col-md-4">
-            <div class="feature-card stagger-card stagger-delay-3 text-center p-4">
-                <div class="fs-1 mb-2">⚡</div>
+            <div class="feature-card stagger-card stagger-delay-3 text-center p-3">
+                <div class="card-img-wrapper">
+                    <img src="https://images.unsplash.com/photo-1628352081506-83c43123ed6d?q=80&w=600&auto=format&fit=crop"
+                        alt="Instant Result">
+                </div>
                 <h3>Instant Result</h3>
                 <p class="lemon-text">Proprietary ML algorithms delivering results in under 100ms.</p>
             </div>
@@ -210,7 +256,6 @@
 {% block extra_js %}
 <script>
     (function () {
-        // Unique observer name to avoid collision with base.html
         const indexObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
