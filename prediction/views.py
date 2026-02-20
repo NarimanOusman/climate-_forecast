@@ -73,3 +73,6 @@ def predict_crop(request):
 def report_list(request):
     reports = PredictionReport.objects.order_by('-created_at')
     return render(request, 'prediction/reports.html', {'reports': reports})
+
+def landing_page(request):
+    return render(request, 'prediction/index.html')

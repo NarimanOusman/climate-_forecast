@@ -1,43 +1,240 @@
 {% extends 'base.html' %}
 
+{% block extra_css %}
+<style>
+    .reports-card {
+        background: var(--card-bg);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid var(--glass-border);
+        border-radius: 24px;
+        padding: 2.5rem;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
+        transition: all 0.3s ease;
+    }
+
+    @media (max-width: 768px) {
+        .reports-card {
+            padding: 1.5rem 1rem;
+            border-radius: 16px;
+        }
+
+        .header-stack {
+            flex-direction: column !important;
+            gap: 1.5rem;
+            align-items: flex-start !important;
+        }
+
+        .report-title {
+            font-size: 1.5rem;
+        }
+    }
+
+    .table {
+        color: var(--text-color) !important;
+        border-color: var(--glass-border) !important;
+        background-color: transparent !important;
+    }
+
+    .table thead th {
+        border-bottom: 2px solid var(--primary-color);
+        color: var(--text-color) !important;
+        background-color: rgba(255, 255, 255, 0.03);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.05em;
+        padding: 1.25rem 1rem;
+    }
+
+    .table tbody td {
+        padding: 1.25rem 1rem;
+        vertical-align: middle;
+        border-bottom: 1px solid var(--glass-border);
+        color: var(--text-color) !important;
+        background-color: transparent !important;
+    }
+
+    /* Forced Horizontal Scroll for Mobile */
+    .table-responsive {
+        overflow-x: auto !important;
+        display: block;
+        width: 100%;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    #reports-table {
+        min-width: 850px;
+        /* Ensures scroller appears on mobile */
+    }
+
+    .table-responsive::-webkit-scrollbar {
+        height: 10px;
+        /* Increased height for easier dragging */
+    }
+
+    .table-responsive::-webkit-scrollbar-track {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+    }
+
+    .table-responsive::-webkit-scrollbar-thumb {
+        background: var(--primary-color);
+        border-radius: 10px;
+        border: 2px solid rgba(0, 0, 0, 0);
+        /* Adds a little spacing */
+        background-clip: padding-box;
+    }
+
+    .table-responsive {
+        padding-bottom: 10px;
+        /* Space for the scrollbar */
+    }
+
+    .badge-crop {
+        background: rgba(39, 174, 96, 0.1);
+        color: var(--primary-color);
+        border: 1px solid rgba(39, 174, 96, 0.2);
+        padding: 0.5rem 1rem;
+        border-radius: 10px;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .report-title {
+        font-weight: 700;
+        background: linear-gradient(to right, var(--text-color), var(--text-muted));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .hidden-row {
+        display: none;
+    }
+
+    .see-more-btn {
+        background: var(--glass-border);
+        border: 1px solid var(--glass-border);
+        color: var(--text-color);
+        padding: 0.75rem 2.5rem;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        margin-top: 2rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .see-more-btn:hover {
+        background: var(--primary-color);
+        color: white;
+        border-color: var(--primary-color);
+        transform: translateY(-2px);
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<h2 class="mb-4">Prediction Reports</h2>
-<div class="card p-4">
+<div class="reports-card fade-in slide-left">
+    <div class="d-flex justify-content-between align-items-center mb-5 header-stack">
+        <h2 class="report-title m-0">Prediction History</h2>
+        <a href="{% url 'predict_crop' %}" class="btn btn-success rounded-pill px-4 fw-bold shadow-sm">New
+            Prediction</a>
+    </div>
+
     <div class="table-responsive">
-        <table class="table table-striped mb-0">
+        <table class="table table-hover" id="reports-table">
             <thead>
                 <tr>
-                    <th>Date</th>
-                    <th>Crop</th>
-                    <th>Nitrogen</th>
-                    <th>Phosphorus</th>
-                    <th>Potassium</th>
+                    <th class="text-nowrap">Date</th>
+                    <th>N</th>
+                    <th>P</th>
+                    <th>K</th>
                     <th>Temp</th>
                     <th>Humidity</th>
                     <th>pH</th>
                     <th>Rainfall</th>
+                    <th class="text-nowrap">Recommended Crop</th>
                 </tr>
             </thead>
             <tbody>
                 {% for report in reports %}
-                <tr>
-                    <td>{{ report.created_at|date:"Y-m-d H:i" }}</td>
-                    <td><strong>{{ report.predicted_crop }}</strong></td>
-                    <td>{{ report.nitrogen }}</td>
-                    <td>{{ report.phosphorus }}</td>
-                    <td>{{ report.potassium }}</td>
-                    <td>{{ report.temperature }}</td>
-                    <td>{{ report.humidity }}</td>
-                    <td>{{ report.ph }}</td>
-                    <td>{{ report.rainfall }}</td>
+                <tr class="report-row {% if forloop.counter > 8 %}hidden-row{% endif %}">
+                    <td class="small text-nowrap" style="color: var(--text-color) !important;">{{
+                        report.created_at|date:"M d, Y H:i" }}</td>
+                    <td style="color: var(--text-color) !important;">{{ report.nitrogen }}</td>
+                    <td style="color: var(--text-color) !important;">{{ report.phosphorus }}</td>
+                    <td style="color: var(--text-color) !important;">{{ report.potassium }}</td>
+                    <td style="color: var(--text-color) !important;">{{ report.temperature }}</td>
+                    <td style="color: var(--text-color) !important;">{{ report.humidity }}</td>
+                    <td style="color: var(--text-color) !important;">{{ report.ph }}</td>
+                    <td style="color: var(--text-color) !important;">{{ report.rainfall }}</td>
+                    <td><span class="badge-crop">{{ report.predicted_crop }}</span></td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="9" class="text-center">No reports found.</td>
+                    <td colspan="9" class="text-center py-5 text-muted">No reports found.</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+
+    {% if reports.count > 8 %}
+    <div class="text-center">
+        <button id="toggle-reports-btn" class="see-more-btn">
+            <span class="btn-text">See More Reports</span>
+            <i class="bi bi-chevron-down"></i>
+        </button>
+    </div>
+    {% endif %}
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const toggleBtn = document.getElementById('toggle-reports-btn');
+        if (!toggleBtn) return;
+
+        const btnText = toggleBtn.querySelector('.btn-text');
+        const btnIcon = toggleBtn.querySelector('i');
+        let isExpanded = false;
+
+        toggleBtn.addEventListener('click', () => {
+            isExpanded = !isExpanded;
+            const rows = document.querySelectorAll('.report-row');
+
+            rows.forEach((row, index) => {
+                if (index >= 8) {
+                    if (isExpanded) {
+                        row.classList.remove('hidden-row');
+                        row.style.opacity = '0';
+                        row.style.transform = 'translateY(10px)';
+                        setTimeout(() => {
+                            row.style.transition = 'all 0.4s ease';
+                            row.style.opacity = '1';
+                            row.style.transform = 'translateY(0)';
+                        }, (index - 8) * 30);
+                    } else {
+                        row.classList.add('hidden-row');
+                    }
+                }
+            });
+
+            if (isExpanded) {
+                btnText.textContent = 'See Less';
+                btnIcon.className = 'bi bi-chevron-up';
+            } else {
+                btnText.textContent = 'See More Reports';
+                btnIcon.className = 'bi bi-chevron-down';
+                // Scroll back to top of table if collapsing
+                const tableTop = document.getElementById('reports-table').offsetTop;
+                window.scrollTo({ top: tableTop - 100, behavior: 'smooth' });
+            }
+        });
+    });
+</script>
 {% endblock %}
