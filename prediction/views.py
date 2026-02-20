@@ -66,7 +66,8 @@ def predict_crop(request):
                 
                 prediction = predicted_crop_name
     else:
-        form = PredictionForm()
+        from django.utils import timezone
+        form = PredictionForm(initial={'created_at': timezone.now()})
 
     return render(request, 'prediction/predict.html', {'form': form, 'prediction': prediction})
 

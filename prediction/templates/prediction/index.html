@@ -4,20 +4,42 @@
 {% block extra_css %}
 <style>
     .hero-section {
-        height: 80vh;
+        min-height: auto;
+        /* Remove fixed height */
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         text-align: center;
-        background: radial-gradient(circle at center, rgba(39, 174, 96, 0.1) 0%, transparent 70%);
+        background: transparent;
+        /* Remove background gradient */
         position: relative;
+        padding: 20px 0 40px;
+    }
+
+    .hero-image-container {
+        width: 100%;
+        max-width: 500px;
+        margin: 0 auto 30px;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .hero-image {
+        width: 100%;
+        height: auto;
+        border-radius: 30px;
+        /* Subtle shadow to make it pop without a heavy background */
+        filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.15));
     }
 
     .hero-content {
         z-index: 10;
         opacity: 0;
-        transform: translateY(30px);
+        transform: translateY(20px);
         animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        animation-delay: 0.2s;
     }
 
     @keyframes fadeInUp {
@@ -28,35 +50,32 @@
     }
 
     .hero-title {
-        font-size: 4rem;
+        font-size: clamp(2rem, 7vw, 4rem);
         font-weight: 800;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1rem;
         letter-spacing: -0.02em;
-        background: linear-gradient(to right, var(--text-color), #2ecc71);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        transition: all 0.3s ease;
+        color: var(--text-color);
+        line-height: 1.1;
     }
 
     .hero-subtitle {
-        font-size: 1.25rem;
+        font-size: clamp(0.9rem, 4vw, 1.15rem);
         color: var(--text-muted);
         max-width: 600px;
-        margin: 0 auto 2.5rem;
-        line-height: 1.6;
-        transition: all 0.3s ease;
+        margin: 0 auto 2rem;
+        line-height: 1.5;
+        padding: 0 1rem;
     }
 
     .btn-hero {
-        padding: 1rem 2.5rem;
-        font-size: 1.1rem;
+        padding: 0.85rem 2rem;
+        font-size: 1rem;
         font-weight: 600;
         border-radius: 50px;
         background: var(--primary-color);
         color: white;
         border: none;
-        box-shadow: 0 10px 20px rgba(39, 174, 96, 0.3);
+        box-shadow: 0 10px 20px rgba(39, 174, 96, 0.2);
         transition: all 0.3s ease;
         text-decoration: none;
         display: inline-block;
@@ -64,81 +83,125 @@
 
     .btn-hero:hover {
         transform: translateY(-3px);
-        box-shadow: 0 15px 30px rgba(39, 174, 96, 0.4);
+        box-shadow: 0 15px 30px rgba(39, 174, 96, 0.3);
         background: var(--secondary-color);
         color: white;
+    }
+
+    /* Staggered Slide Left Animation */
+    .stagger-card {
+        opacity: 0;
+        transform: translateX(-50px);
+        transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .stagger-card.active {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .stagger-delay-1 {
+        transition-delay: 0.1s;
+    }
+
+    .stagger-delay-2 {
+        transition-delay: 0.25s;
+    }
+
+    .stagger-delay-3 {
+        transition-delay: 0.4s;
     }
 
     .feature-card {
         background: var(--card-bg);
         border: 1px solid var(--glass-border);
         border-radius: 20px;
-        backdrop-filter: blur(5px);
-        transition: all 0.3s ease;
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        margin-bottom: 1.5rem;
+    }
+
+    .feature-card h3 {
+        font-weight: 700;
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+    }
+
+    .lemon-text {
+        color: #e0ff2e !important;
+        font-weight: 500;
+        font-size: 0.9rem;
     }
 
     .feature-card:hover {
-        transform: translateY(-10px);
+        transform: translateY(-8px);
         border-color: var(--primary-color);
     }
 
-    #animation-canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 0;
-    }
+    @media (max-width: 768px) {
+        .hero-section {
+            padding: 40px 0 20px;
+        }
 
-    .particle {
-        position: absolute;
-        background: var(--primary-color);
-        border-radius: 50%;
-        opacity: 0.3;
-        pointer-events: none;
+        .hero-image-container {
+            max-width: 300px;
+            margin-bottom: 20px;
+        }
+
+        .gap-btn-mobile {
+            flex-direction: column;
+            gap: 1rem !important;
+        }
     }
 </style>
 {% endblock %}
 
 {% block content %}
 <section class="hero-section">
-    <div id="animation-canvas"></div>
+    <!-- Centered Image right after Nav -->
+    <div class="hero-image-container">
+        <img src="{% static 'prediction/images/farmer.png' %}" alt="Nariman Farmer" class="hero-image">
+    </div>
+
     <div class="hero-content">
         <h1 class="hero-title">Nariman Crop Recommender</h1>
         <p class="hero-subtitle">
-            Harnessing Artificial Intelligence to help farmers make data-driven decisions.
-            Analyze your soil content and get instant, accurate crop recommendations.
+            Empowering agriculture with data-driven insights.
+            Join smart farmers maximizing their harvest potential.
         </p>
-        <div class="d-flex justify-content-center gap-3">
+        <div class="d-flex justify-content-center gap-3 gap-btn-mobile">
             <a href="{% url 'predict_crop' %}" class="btn-hero">Start Predicting</a>
             <a href="{% url 'report_list' %}" class="btn-hero"
-                style="background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glass-border);">View Reports</a>
+                style="background: rgba(255, 255, 255, 0.1); border: 1px solid var(--glass-border);">View History</a>
         </div>
     </div>
 </section>
 
 <!-- Features Section -->
-<div class="row mt-5">
-    <div class="col-md-4 mb-4">
-        <div class="feature-card text-center p-4 h-100">
-            <div class="fs-1 mb-3">🧪</div>
-            <h3>Soil Analysis</h3>
-            <p class="text-muted">Take into account Nitrogen, Phosphorus, Potassium levels and more.</p>
+<div class="container pb-5">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="feature-card stagger-card stagger-delay-1 text-center p-4">
+                <div class="fs-1 mb-2">🧪</div>
+                <h3>Soil Analysis</h3>
+                <p class="lemon-text">Precision tracking of Nitrogen, Phosphorus, and Potassium balance.</p>
+            </div>
         </div>
-    </div>
-    <div class="col-md-4 mb-4">
-        <div class="feature-card text-center p-4 h-100">
-            <div class="fs-1 mb-3">🌦️</div>
-            <h3>Climatic Data</h3>
-            <p class="text-muted">Smart predictions based on Humidity, Rainfall and Temperature.</p>
+        <div class="col-md-4">
+            <div class="feature-card stagger-card stagger-delay-2 text-center p-4">
+                <div class="fs-1 mb-2">🌦️</div>
+                <h3>Climatic Data</h3>
+                <p class="lemon-text">Adaptive modeling using real-time Humidity, Rainfall, and Temp.</p>
+            </div>
         </div>
-    </div>
-    <div class="col-md-4 mb-4">
-        <div class="feature-card text-center p-4 h-100">
-            <div class="fs-1 mb-3">⚡</div>
-            <h3>Instant Result</h3>
-            <p class="text-muted">Get highly accurate ML-powered recommendations in milliseconds.</p>
+        <div class="col-md-4">
+            <div class="feature-card stagger-card stagger-delay-3 text-center p-4">
+                <div class="fs-1 mb-2">⚡</div>
+                <h3>Instant Result</h3>
+                <p class="lemon-text">Proprietary ML algorithms delivering results in under 100ms.</p>
+            </div>
         </div>
     </div>
 </div>
@@ -146,48 +209,19 @@
 
 {% block extra_js %}
 <script>
-    // Simple particle animation for the background
-    const canvas = document.getElementById('animation-canvas');
-    const colors = ['#27ae60', '#2ecc71', '#ffffff'];
+    (function () {
+        // Unique observer name to avoid collision with base.html
+        const indexObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                } else {
+                    entry.target.classList.remove('active');
+                }
+            });
+        }, { threshold: 0.1 });
 
-    function createParticle() {
-        const particle = document.createElement('div');
-        particle.className = 'particle';
-
-        const size = Math.random() * 5 + 2;
-        const startX = Math.random() * window.innerWidth;
-        const startY = Math.random() * window.innerHeight;
-
-        particle.style.width = `${size}px`;
-        particle.style.height = `${size}px`;
-        particle.style.left = `${startX}px`;
-        particle.style.top = `${startY}px`;
-        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-
-        canvas.appendChild(particle);
-
-        animateParticle(particle);
-    }
-
-    function animateParticle(p) {
-        const duration = Math.random() * 20000 + 10000;
-        const destinationX = Math.random() * window.innerWidth;
-        const destinationY = Math.random() * window.innerHeight;
-
-        const animation = p.animate([
-            { transform: 'translate(0, 0)', opacity: 0 },
-            { opacity: 0.4, offset: 0.1 },
-            { opacity: 0.4, offset: 0.9 },
-            { transform: `translate(${destinationX - parseFloat(p.style.left)}px, ${destinationY - parseFloat(p.style.top)}px)`, opacity: 0 }
-        ], {
-            duration: duration,
-            iterations: Infinity
-        });
-    }
-
-    // Initialize particles
-    for (let i = 0; i < 50; i++) {
-        createParticle();
-    }
+        document.querySelectorAll('.stagger-card').forEach(el => indexObserver.observe(el));
+    })();
 </script>
 {% endblock %}

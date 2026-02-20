@@ -12,8 +12,6 @@
         padding: 3rem;
         box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.2);
         transition: all 0.3s ease;
-
-        /* Slide-up Animation */
         opacity: 0;
         transform: translateY(50px);
         animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
@@ -77,21 +75,9 @@
         background: rgba(39, 174, 96, 0.1);
         border: 1px solid rgba(39, 174, 96, 0.2);
         border-radius: 16px;
-        padding: 2rem;
+        padding: 2.5rem;
         margin-top: 2rem;
         animation: slideInDown 0.5s ease-out;
-    }
-
-    .predict-title {
-        font-weight: 800;
-        background: linear-gradient(to right, var(--text-color), var(--primary-color));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 15px;
     }
 
     @keyframes slideInDown {
@@ -103,6 +89,28 @@
         to {
             opacity: 1;
             transform: translateY(0);
+        }
+    }
+
+    /* Mobile Adjustments */
+    @media (max-width: 768px) {
+        .prediction-card {
+            padding: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .prediction-result {
+            padding: 1.5rem 1rem;
+        }
+
+        .prediction-result h2 {
+            font-size: 2.2rem !important;
+            word-break: break-word;
+        }
+
+        .btn-predict {
+            font-size: 1rem;
+            padding: 0.85rem;
         }
     }
 </style>
@@ -118,7 +126,7 @@
                 <p class="mx-auto px-lg-4 mt-3 slide-left"
                     style="max-width: 600px; font-size: 1.1rem; line-height: 1.6; color: var(--text-color);">
                     Optimize your agricultural output with data-driven insights. Input your soil's nutritional data
-                    below to receive an instant, AI-powered recommendation for the best crops for your land.
+                    below to receive an instant recommendation for the best crops for your land.
                 </p>
             </div>
             <form method="post">
@@ -135,17 +143,20 @@
                     {% endfor %}
                 </div>
                 <div class="text-center mt-4">
-                    <button type="submit" class="btn btn-primary btn-predict w-100">
-                        Generate Recommendation
-                    </button>
+                    <button type="submit" class="btn btn-primary btn-predict w-100">Get Recommendation</button>
                 </div>
             </form>
 
             {% if prediction %}
             <div class="prediction-result text-center">
-                <p class="text-muted mb-1">Our AI suggests you plant:</p>
-                <h2 style="color: var(--secondary-color); font-weight: 800; font-size: 3rem; margin: 0;">{{ prediction
-                    }}</h2>
+                <p class="text-muted mb-2"
+                    style="font-weight: 600; text-transform: uppercase; letter-spacing: 2px; font-size: 0.8rem;">Best
+                    Crop for your Soil:</p>
+                <h2
+                    style="color:var(--secondary-color);font-weight:900;font-size:3.5rem;margin:0;text-transform:uppercase;letter-spacing:-1px">
+                    {{prediction}}</h2>
+                <div class="mt-2 text-primary" style="font-size: 0.9rem; font-weight: 600;">Optimal Path Verified ✓
+                </div>
             </div>
             {% endif %}
         </div>

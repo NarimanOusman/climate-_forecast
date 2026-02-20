@@ -61,16 +61,15 @@
         display: block;
         width: 100%;
         -webkit-overflow-scrolling: touch;
+        padding-bottom: 15px;
     }
 
     #reports-table {
         min-width: 850px;
-        /* Ensures scroller appears on mobile */
     }
 
     .table-responsive::-webkit-scrollbar {
         height: 10px;
-        /* Increased height for easier dragging */
     }
 
     .table-responsive::-webkit-scrollbar-track {
@@ -82,13 +81,7 @@
         background: var(--primary-color);
         border-radius: 10px;
         border: 2px solid rgba(0, 0, 0, 0);
-        /* Adds a little spacing */
         background-clip: padding-box;
-    }
-
-    .table-responsive {
-        padding-bottom: 10px;
-        /* Space for the scrollbar */
     }
 
     .badge-crop {
@@ -162,16 +155,16 @@
             <tbody>
                 {% for report in reports %}
                 <tr class="report-row {% if forloop.counter > 8 %}hidden-row{% endif %}">
-                    <td class="small text-nowrap" style="color: var(--text-color) !important;">{{
-                        report.created_at|date:"M d, Y H:i" }}</td>
-                    <td style="color: var(--text-color) !important;">{{ report.nitrogen }}</td>
-                    <td style="color: var(--text-color) !important;">{{ report.phosphorus }}</td>
-                    <td style="color: var(--text-color) !important;">{{ report.potassium }}</td>
-                    <td style="color: var(--text-color) !important;">{{ report.temperature }}</td>
-                    <td style="color: var(--text-color) !important;">{{ report.humidity }}</td>
-                    <td style="color: var(--text-color) !important;">{{ report.ph }}</td>
-                    <td style="color: var(--text-color) !important;">{{ report.rainfall }}</td>
-                    <td><span class="badge-crop">{{ report.predicted_crop }}</span></td>
+                    <td class="small text-nowrap" style="color:var(--text-color)!important">
+                        {{report.created_at|date:"d/m/Y H:i"}}</td>
+                    <td style="color:var(--text-color)!important">{{report.nitrogen}}</td>
+                    <td style="color:var(--text-color)!important">{{report.phosphorus}}</td>
+                    <td style="color:var(--text-color)!important">{{report.potassium}}</td>
+                    <td style="color:var(--text-color)!important">{{report.temperature}}</td>
+                    <td style="color:var(--text-color)!important">{{report.humidity}}</td>
+                    <td style="color:var(--text-color)!important">{{report.ph}}</td>
+                    <td style="color:var(--text-color)!important">{{report.rainfall}}</td>
+                    <td><span class="badge-crop">{{report.predicted_crop}}</span></td>
                 </tr>
                 {% empty %}
                 <tr>
@@ -198,15 +191,12 @@
     document.addEventListener('DOMContentLoaded', function () {
         const toggleBtn = document.getElementById('toggle-reports-btn');
         if (!toggleBtn) return;
-
         const btnText = toggleBtn.querySelector('.btn-text');
         const btnIcon = toggleBtn.querySelector('i');
         let isExpanded = false;
-
         toggleBtn.addEventListener('click', () => {
             isExpanded = !isExpanded;
             const rows = document.querySelectorAll('.report-row');
-
             rows.forEach((row, index) => {
                 if (index >= 8) {
                     if (isExpanded) {
@@ -218,19 +208,15 @@
                             row.style.opacity = '1';
                             row.style.transform = 'translateY(0)';
                         }, (index - 8) * 30);
-                    } else {
-                        row.classList.add('hidden-row');
-                    }
+                    } else { row.classList.add('hidden-row'); }
                 }
             });
-
             if (isExpanded) {
                 btnText.textContent = 'See Less';
                 btnIcon.className = 'bi bi-chevron-up';
             } else {
                 btnText.textContent = 'See More Reports';
                 btnIcon.className = 'bi bi-chevron-down';
-                // Scroll back to top of table if collapsing
                 const tableTop = document.getElementById('reports-table').offsetTop;
                 window.scrollTo({ top: tableTop - 100, behavior: 'smooth' });
             }
