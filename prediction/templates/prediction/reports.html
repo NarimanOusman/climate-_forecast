@@ -107,17 +107,21 @@
     }
 
     .see-more-btn {
-        background: var(--glass-border);
+        background: rgba(255, 255, 255, 0.1);
         border: 1px solid var(--glass-border);
         color: var(--text-color);
-        padding: 0.75rem 2.5rem;
+        padding: 0.85rem 3rem;
         border-radius: 50px;
         font-weight: 600;
         transition: all 0.3s ease;
-        margin-top: 2rem;
+        margin: 2.5rem 0;
+        /* Consistent vertical spacing */
         display: inline-flex;
         align-items: center;
+        justify-content: center;
         gap: 10px;
+        min-width: 200px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
 
     .see-more-btn:hover {
@@ -125,6 +129,16 @@
         color: white;
         border-color: var(--primary-color);
         transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(39, 174, 96, 0.3);
+    }
+
+    @media (max-width: 768px) {
+        .see-more-btn {
+            width: 90%;
+            /* Larger touch target for mobile */
+            padding: 1rem;
+            margin: 2rem 0 1rem;
+        }
     }
 </style>
 {% endblock %}
@@ -175,8 +189,8 @@
         </table>
     </div>
 
-    {% if reports.count > 8 %}
-    <div class="text-center">
+    {% if reports|length > 8 %}
+    <div class="text-center d-flex justify-content-center w-100">
         <button id="toggle-reports-btn" class="see-more-btn">
             <span class="btn-text">See More Reports</span>
             <i class="bi bi-chevron-down"></i>
